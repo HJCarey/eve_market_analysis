@@ -39,6 +39,46 @@ def get_item_history(mdc_client, type_id, region_id, lookback_date):
     return market_history
 
 
+def construct_internal_spread(mdc_client, dict_items, stations, date):
+    df = pd.DataFrame(list(dict_items.keys()))
+    df.columns = ['Items']
+    
+    for key, station in stations.items():
+        test_series = df.apply(lambda row:
+                            get_item_book(mdc_client,
+                                                dict_items[row['Items']],
+                                                station.get_station_id(),
+                                                station.get_region_id(),
+                                                date), axis=1)
+        spread_name = f"%s: internal spread"%station.get_station_shorthand()
+        buy_name = f"%s: buys"%station.get_station_shorthand()
+        sell_name = f"%s: sells"%station.get_station_shorthand()
+        df[[spread_name,buy_name,sell_name]] = pd.DataFrame(test_series.values.tolist(), 
+                            index=df.index)
+        
+    return df
+
+
+def construct_comparison_spread(mdc_client, dict_items, stations, date):
+    df = pd.DataFrame(list(dict_items.keys()))
+    df.coluns = ['Items']
+    
+    # Construct crossproduct of stations
+    
+    
+    for station in stations:
+        test_series = df.apply(lambda row:
+                           get_item_book(mdc_client,
+                                         dict_items[row['Items']],
+                                         station.get_station_id(),
+                                         station.get_region_id(),
+                                         date), axis=1)
+        
+        
+#def stations_cross_product(stations):
+    
+    
+
 def get_item_book(mdc_client, type_id, station_id, region_id, date):
     # Get the item data from the 
     book =  mdc_client.MarketData.book(typeID=type_id, regionID=region_id, date=str(date)).result()
