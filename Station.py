@@ -20,7 +20,7 @@ class Station:
         return self.sde_client.Station.getStations(
             stationName=f"{{values: ['%s']}}"%self.station_name).result()[0]['regionID']
     
-    def generate_shorthand(self):
+    def generate_shorthand():
         return self.station_name.split()[0]
     
     def get_station_name(self):
