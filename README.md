@@ -5,4 +5,4 @@ TODO:
 * Add percentages column
 * Query class will hold individual item/station queries. This modularization
   will allow for "themed" datasets.
-
+* Add mass as a feature for each item
